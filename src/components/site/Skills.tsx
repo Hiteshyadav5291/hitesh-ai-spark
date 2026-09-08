@@ -1,15 +1,16 @@
 import { useState } from "react";
-import { skillGroups } from "@/data/portfolio";
+import type { SkillGroup } from "@/lib/content";
 
 /**
  * Skills are shown as an interactive constellation of floating chips.
  * Hovering or focusing a chip reveals a short note about that skill.
  */
-export function Skills() {
-  const [activeCategory, setActiveCategory] = useState(skillGroups[0]!.category);
+export function Skills({ skillGroups }: { skillGroups: SkillGroup[] }) {
+  const [activeCategory, setActiveCategory] = useState<string | null>(null);
   const [hovered, setHovered] = useState<{ name: string; note: string } | null>(null);
 
-  const group = skillGroups.find((g) => g.category === activeCategory)!;
+  const group =
+    skillGroups.find((g) => g.category === activeCategory) ?? skillGroups[0] ?? null;
 
   return (
     <section id="skills" className="relative scroll-mt-28 py-24">
@@ -28,13 +29,13 @@ export function Skills() {
             <button
               key={g.category}
               role="tab"
-              aria-selected={activeCategory === g.category}
+              aria-selected={(group?.category ?? "") === g.category}
               onClick={() => {
                 setActiveCategory(g.category);
                 setHovered(null);
               }}
               className={`rounded-xl px-4 py-2 text-sm font-medium transition-all duration-300 ${
-                activeCategory === g.category
+                (group?.category ?? "") === g.category
                   ? "gradient-surface shadow-md"
                   : "glass-panel text-muted-foreground hover:text-foreground"
               }`}
@@ -45,10 +46,10 @@ export function Skills() {
         </div>
 
         <div className="reveal glass-panel mt-6 rounded-3xl p-6 sm:p-8">
-          <p className="text-sm text-muted-foreground">{group.blurb}</p>
+          <p className="text-sm text-muted-foreground">{group?.blurb}</p>
 
           <ul className="mt-6 flex flex-wrap gap-3">
-            {group.skills.map((skill, i) => (
+            {(group?.skills ?? []).map((skill, i) => (
               <li key={skill.name}>
                 <button
                   type="button"

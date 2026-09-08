@@ -1,6 +1,8 @@
 import { createFileRoute } from "@tanstack/react-router";
+import { useSuspenseQuery } from "@tanstack/react-query";
 import { Toaster } from "@/components/ui/sonner";
 import { useReveal } from "@/hooks/use-reveal";
+import { portfolioQueryOptions, groupSkills } from "@/lib/content";
 import { Loader } from "@/components/site/Loader";
 import { SiteNav } from "@/components/site/SiteNav";
 import { Hero } from "@/components/site/Hero";
@@ -26,11 +28,20 @@ export const Route = createFileRoute("/")({
       { name: "twitter:card", content: "summary_large_image" },
     ],
   }),
+  loader: ({ context }) => context.queryClient.ensureQueryData(portfolioQueryOptions),
+  errorComponent: () => (
+    <div className="flex min-h-screen items-center justify-center px-6 text-center">
+      <p className="text-sm text-muted-foreground">
+        Something went wrong loading the portfolio. Please refresh the page.
+      </p>
+    </div>
+  ),
   component: Index,
 });
 
 function Index() {
   useReveal();
+  const { data } = useSuspenseQuery(portfolioQueryOptions);
 
   return (
     <>
@@ -39,9 +50,9 @@ function Index() {
       <main>
         <Hero />
         <About />
-        <Skills />
-        <Projects />
-        <Journey />
+        <Skills skillGroups={groupSkills(data.skills)} />
+        <Projects projects={data.projects} />
+        <Journey timeline={data.timeline} />
         <Contact />
       </main>
       <SiteFooter />
@@ -49,3 +60,4 @@ function Index() {
     </>
   );
 }
+
