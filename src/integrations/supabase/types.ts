@@ -14,13 +14,126 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      projects: {
+        Row: {
+          category: string
+          created_at: string
+          demo_url: string
+          description: string
+          details: string
+          featured: boolean
+          github_url: string
+          id: string
+          sort_order: number
+          technologies: string[]
+          title: string
+          updated_at: string
+        }
+        Insert: {
+          category?: string
+          created_at?: string
+          demo_url?: string
+          description?: string
+          details?: string
+          featured?: boolean
+          github_url?: string
+          id?: string
+          sort_order?: number
+          technologies?: string[]
+          title: string
+          updated_at?: string
+        }
+        Update: {
+          category?: string
+          created_at?: string
+          demo_url?: string
+          description?: string
+          details?: string
+          featured?: boolean
+          github_url?: string
+          id?: string
+          sort_order?: number
+          technologies?: string[]
+          title?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      skills: {
+        Row: {
+          category: string
+          category_note: string
+          created_at: string
+          id: string
+          name: string
+          note: string
+          sort_order: number
+          updated_at: string
+        }
+        Insert: {
+          category: string
+          category_note?: string
+          created_at?: string
+          id?: string
+          name: string
+          note?: string
+          sort_order?: number
+          updated_at?: string
+        }
+        Update: {
+          category?: string
+          category_note?: string
+          created_at?: string
+          id?: string
+          name?: string
+          note?: string
+          sort_order?: number
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      timeline: {
+        Row: {
+          created_at: string
+          description: string
+          id: string
+          is_current: boolean
+          period: string
+          place: string
+          sort_order: number
+          title: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          description?: string
+          id?: string
+          is_current?: boolean
+          period?: string
+          place?: string
+          sort_order?: number
+          title: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          description?: string
+          id?: string
+          is_current?: boolean
+          period?: string
+          place?: string
+          sort_order?: number
+          title?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      is_site_admin: { Args: never; Returns: boolean }
     }
     Enums: {
       [_ in never]: never
