@@ -1,21 +1,23 @@
 import { useRef, useState } from "react";
 import { Github, ExternalLink, X, Star } from "lucide-react";
-import { projects, type Project } from "@/data/portfolio";
+import type { ProjectRow } from "@/lib/content.functions";
 
 import imgVision from "@/assets/project-vision.jpg";
 import imgText from "@/assets/project-text.jpg";
 import imgData from "@/assets/project-data.jpg";
 import imgWeb from "@/assets/project-web.jpg";
 
-const images: Record<string, string> = {
-  "vision-classifier": imgVision,
-  "text-insights": imgText,
-  "data-dashboard": imgData,
-  "portfolio-3d": imgWeb,
-};
+const gallery = [imgVision, imgText, imgData, imgWeb];
+
+/** Stable illustration per project so cards keep the same look between visits. */
+function imageFor(id: string) {
+  let sum = 0;
+  for (let i = 0; i < id.length; i += 1) sum += id.charCodeAt(i);
+  return gallery[sum % gallery.length]!;
+}
 
 /** Card with a subtle 3D tilt that follows the pointer. */
-function ProjectCard({ project, onOpen }: { project: Project; onOpen: () => void }) {
+function ProjectCard({ project, onOpen }: { project: ProjectRow; onOpen: () => void }) {
   const ref = useRef<HTMLDivElement>(null);
 
   const handleMove = (e: React.MouseEvent) => {
@@ -40,7 +42,7 @@ function ProjectCard({ project, onOpen }: { project: Project; onOpen: () => void
     >
       <div className="relative aspect-[16/10] overflow-hidden">
         <img
-          src={images[project.id]}
+          src={imageFor(project.id)}
           alt={`Preview illustration for ${project.title}`}
           loading="lazy"
           className="size-full object-cover transition-transform duration-700 group-hover:scale-105"
@@ -79,13 +81,13 @@ function ProjectCard({ project, onOpen }: { project: Project; onOpen: () => void
             View details
           </button>
           <a
-            href={project.github}
+            href={project.github_url || "#"}
             className="inline-flex items-center gap-1.5 rounded-xl border border-border px-3 py-2 text-xs font-medium transition-colors hover:bg-muted"
           >
             <Github className="size-3.5" aria-hidden="true" /> GitHub
           </a>
           <a
-            href={project.demo}
+            href={project.demo_url || "#"}
             className="inline-flex items-center gap-1.5 rounded-xl border border-border px-3 py-2 text-xs font-medium transition-colors hover:bg-muted"
           >
             <ExternalLink className="size-3.5" aria-hidden="true" /> Demo
@@ -96,9 +98,9 @@ function ProjectCard({ project, onOpen }: { project: Project; onOpen: () => void
   );
 }
 
-export function Projects() {
+export function Projects({ projects }: { projects: ProjectRow[] }) {
   const [filter, setFilter] = useState("All");
-  const [open, setOpen] = useState<Project | null>(null);
+  const [open, setOpen] = useState<ProjectRow | null>(null);
 
   const categories = ["All", ...Array.from(new Set(projects.map((p) => p.category)))];
   const visible = filter === "All" ? projects : projects.filter((p) => p.category === filter);
@@ -153,7 +155,7 @@ export function Projects() {
           >
             <div className="relative">
               <img
-                src={images[open.id]}
+                src={imageFor(open.id)}
                 alt={`Preview illustration for ${open.title}`}
                 className="aspect-[16/9] w-full rounded-t-3xl object-cover"
               />
@@ -182,13 +184,13 @@ export function Projects() {
               </ul>
               <div className="mt-6 flex gap-2">
                 <a
-                  href={open.github}
+                  href={open.github_url || "#"}
                   className="inline-flex items-center gap-1.5 rounded-xl border border-border px-4 py-2 text-xs font-medium"
                 >
                   <Github className="size-3.5" aria-hidden="true" /> GitHub
                 </a>
                 <a
-                  href={open.demo}
+                  href={open.demo_url || "#"}
                   className="gradient-surface inline-flex items-center gap-1.5 rounded-xl px-4 py-2 text-xs font-semibold"
                 >
                   <ExternalLink className="size-3.5" aria-hidden="true" /> Live Demo

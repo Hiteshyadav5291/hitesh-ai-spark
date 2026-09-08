@@ -1,7 +1,8 @@
 import { GraduationCap, MapPin } from "lucide-react";
-import { timeline, education } from "@/data/portfolio";
+import { education } from "@/data/portfolio";
+import type { TimelineRow } from "@/lib/content.functions";
 
-export function Journey() {
+export function Journey({ timeline }: { timeline: TimelineRow[] }) {
   return (
     <section id="experience" className="mx-auto max-w-6xl scroll-mt-28 px-5 py-24">
       <div className="reveal">
@@ -12,7 +13,7 @@ export function Journey() {
       <div className="mt-10 grid gap-10 lg:grid-cols-[1.15fr_0.85fr]">
         <ol className="relative space-y-6 border-l border-border pl-6">
           {timeline.map((entry) => (
-            <li key={entry.title} className="reveal relative">
+            <li key={entry.id} className="reveal relative">
               <span
                 className="gradient-surface absolute top-2 -left-[31px] size-3 rounded-full ring-4 ring-background"
                 aria-hidden="true"
@@ -22,7 +23,7 @@ export function Journey() {
                   <span className="rounded-lg bg-muted px-2.5 py-1 text-[11px] font-medium text-muted-foreground">
                     {entry.period}
                   </span>
-                  {entry.current && (
+                  {entry.is_current && (
                     <span className="gradient-surface rounded-lg px-2.5 py-1 text-[11px] font-semibold">
                       Current
                     </span>
